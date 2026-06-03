@@ -8,7 +8,7 @@ public class CameraScroll : MonoBehaviour
 	// Token: 0x0600009D RID: 157 RVA: 0x00002A5C File Offset: 0x00000C5C
 	private void Start()
 	{
-		this.speedSlider.onValueChanged.AddListener(delegate(float <p0>)
+		this.speedSlider.onValueChanged.AddListener(delegate(float value)
 		{
 			this.ChangeSpeed();
 		});

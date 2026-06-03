@@ -16,16 +16,16 @@ namespace Lua.Wrapper
 			List<WPathfindingNode> nodes = new List<WPathfindingNode>();
 			AstarPath active = AstarPath.active;
 			PathfindingBox.Type type2 = type.ToPathfindingBoxType();
-			Action<GraphNode> <>9__0;
+			Action<GraphNode> cachedAction = null;
 			foreach (NavGraph navGraph in active.data.graphs)
 			{
 				if (navGraph != null && PathfindingManager.GetTypeFromGraphName(navGraph) == type2)
 				{
 					NavGraph navGraph2 = navGraph;
 					Action<GraphNode> action;
-					if ((action = <>9__0) == null)
+					if ((action = cachedAction) == null)
 					{
-						action = (<>9__0 = delegate(GraphNode node)
+						action = (cachedAction = delegate(GraphNode node)
 						{
 							if (!underWater && node.Tag == 3U)
 							{
@@ -59,16 +59,16 @@ namespace Lua.Wrapper
 			GraphNode closestNode = null;
 			float minDistance = float.MaxValue;
 			PathfindingBox.Type type2 = type.ToPathfindingBoxType();
-			Action<GraphNode> <>9__0;
+			Action<GraphNode> cachedAction = null;
 			foreach (NavGraph navGraph in AstarPath.active.data.graphs)
 			{
 				if (navGraph != null && PathfindingManager.GetTypeFromGraphName(navGraph) == type2)
 				{
 					NavGraph navGraph2 = navGraph;
 					Action<GraphNode> action;
-					if ((action = <>9__0) == null)
+					if ((action = cachedAction) == null)
 					{
-						action = (<>9__0 = delegate(GraphNode node)
+						action = (cachedAction = delegate(GraphNode node)
 						{
 							if (!underWater && node.Tag == 3U)
 							{

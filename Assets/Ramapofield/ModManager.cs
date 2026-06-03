@@ -640,14 +640,14 @@ public class ModManager : MonoBehaviour
 			yield return 0;
 		}
 		int i;
-		Func<bool> <>9__1;
+		Func<bool> cachedPredicate = null;
 		int i2;
 		for (i = 0; i < nWorkers; i = i2 + 1)
 		{
 			Func<bool> predicate;
-			if ((predicate = <>9__1) == null)
+			if ((predicate = cachedPredicate) == null)
 			{
-				predicate = (<>9__1 = (() => workers[i].IsReadyToAcceptNewItem()));
+				predicate = (cachedPredicate = (() => workers[i].IsReadyToAcceptNewItem()));
 			}
 			yield return new WaitUntil(predicate);
 			i2 = i;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace MoonSharp.Interpreter.DataStructs
 {
 	// Token: 0x020008CD RID: 2253
-	internal class FastStack<T> : IList<T>, ICollection<T>, IEnumerable<!0>, IEnumerable
+	internal class FastStack<T> : IList<T>, ICollection<T>, IEnumerable<T>, IEnumerable
 	{
 		// Token: 0x060038D8 RID: 14552 RVA: 0x00026710 File Offset: 0x00024910
 		public FastStack(int maxCapacity)
@@ -113,25 +113,25 @@ namespace MoonSharp.Interpreter.DataStructs
 		}
 
 		// Token: 0x060038E6 RID: 14566 RVA: 0x00024714 File Offset: 0x00022914
-		int IList<!0>.IndexOf(T item)
+		int IList<T>.IndexOf(T item)
 		{
 			throw new NotImplementedException();
 		}
 
 		// Token: 0x060038E7 RID: 14567 RVA: 0x00024714 File Offset: 0x00022914
-		void IList<!0>.Insert(int index, T item)
+		void IList<T>.Insert(int index, T item)
 		{
 			throw new NotImplementedException();
 		}
 
 		// Token: 0x060038E8 RID: 14568 RVA: 0x00024714 File Offset: 0x00022914
-		void IList<!0>.RemoveAt(int index)
+		void IList<T>.RemoveAt(int index)
 		{
 			throw new NotImplementedException();
 		}
 
 		// Token: 0x17000503 RID: 1283
-		T IList<!0>.this[int index]
+		T IList<T>.this[int index]
 		{
 			get
 			{
@@ -144,32 +144,32 @@ namespace MoonSharp.Interpreter.DataStructs
 		}
 
 		// Token: 0x060038EB RID: 14571 RVA: 0x000267DB File Offset: 0x000249DB
-		void ICollection<!0>.Add(T item)
+		void ICollection<T>.Add(T item)
 		{
 			this.Push(item);
 		}
 
 		// Token: 0x060038EC RID: 14572 RVA: 0x000267E5 File Offset: 0x000249E5
-		void ICollection<!0>.Clear()
+		void ICollection<T>.Clear()
 		{
 			this.Clear();
 		}
 
 		// Token: 0x060038ED RID: 14573 RVA: 0x00024714 File Offset: 0x00022914
-		bool ICollection<!0>.Contains(T item)
+		bool ICollection<T>.Contains(T item)
 		{
 			throw new NotImplementedException();
 		}
 
 		// Token: 0x060038EE RID: 14574 RVA: 0x00024714 File Offset: 0x00022914
-		void ICollection<!0>.CopyTo(T[] array, int arrayIndex)
+		void ICollection<T>.CopyTo(T[] array, int arrayIndex)
 		{
 			throw new NotImplementedException();
 		}
 
 		// Token: 0x17000504 RID: 1284
 		// (get) Token: 0x060038EF RID: 14575 RVA: 0x000267ED File Offset: 0x000249ED
-		int ICollection<!0>.Count
+		int ICollection<T>.Count
 		{
 			get
 			{
@@ -179,7 +179,7 @@ namespace MoonSharp.Interpreter.DataStructs
 
 		// Token: 0x17000505 RID: 1285
 		// (get) Token: 0x060038F0 RID: 14576 RVA: 0x0000257D File Offset: 0x0000077D
-		bool ICollection<!0>.IsReadOnly
+		bool ICollection<T>.IsReadOnly
 		{
 			get
 			{
@@ -188,13 +188,13 @@ namespace MoonSharp.Interpreter.DataStructs
 		}
 
 		// Token: 0x060038F1 RID: 14577 RVA: 0x00024714 File Offset: 0x00022914
-		bool ICollection<!0>.Remove(T item)
+		bool ICollection<T>.Remove(T item)
 		{
 			throw new NotImplementedException();
 		}
 
 		// Token: 0x060038F2 RID: 14578 RVA: 0x00024714 File Offset: 0x00022914
-		IEnumerator<T> IEnumerable<!0>.GetEnumerator()
+		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
 			throw new NotImplementedException();
 		}

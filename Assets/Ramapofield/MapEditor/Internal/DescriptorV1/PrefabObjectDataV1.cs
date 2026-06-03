@@ -47,8 +47,8 @@ namespace MapEditor.Internal.DescriptorV1
 			}).ToArray();
 			for (int i = 0; i < array.Length; i++)
 			{
-				var <>f__AnonymousType = array[i];
-				GoPropertyProvider.Deserialize(<>f__AnonymousType.property, <>f__AnonymousType.serializedValue, ctx);
+				var item = array[i];
+				GoPropertyProvider.Deserialize(item.property, item.serializedValue, ctx);
 			}
 		}
 

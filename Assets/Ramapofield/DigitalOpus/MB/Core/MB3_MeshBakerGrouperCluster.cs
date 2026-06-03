@@ -49,7 +49,7 @@ namespace DigitalOpus.MB.Core
 			}
 			List<MB3_AgglomerativeClustering.item_s> list = new List<MB3_AgglomerativeClustering.item_s>();
 			int i;
-			Predicate<MB3_AgglomerativeClustering.item_s> <>9__0;
+			Predicate<MB3_AgglomerativeClustering.item_s> cachedMatch = null;
 			int j;
 			for (i = 0; i < gos.Count; i = j + 1)
 			{
@@ -57,9 +57,9 @@ namespace DigitalOpus.MB.Core
 				{
 					List<MB3_AgglomerativeClustering.item_s> list2 = list;
 					Predicate<MB3_AgglomerativeClustering.item_s> match;
-					if ((match = <>9__0) == null)
+					if ((match = cachedMatch) == null)
 					{
-						match = (<>9__0 = ((MB3_AgglomerativeClustering.item_s x) => x.go == gos[i]));
+						match = (cachedMatch = ((MB3_AgglomerativeClustering.item_s x) => x.go == gos[i]));
 					}
 					if (list2.Find(match) == null)
 					{
