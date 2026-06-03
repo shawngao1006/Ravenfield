@@ -859,7 +859,7 @@ public class GameManager : MonoBehaviour
 	// Token: 0x06000B9E RID: 2974 RVA: 0x00075D3C File Offset: 0x00073F3C
 	public static string GenerateVersionString()
 	{
-		return string.Format("Ravenfield build {0}{1}, Engine Version {2}, BuildGUID {3}", new object[]
+		return string.Format("Ramapofield build {0}{1}, Engine Version {2}, BuildGUID {3}", new object[]
 		{
 			GameManager.instance.buildNumber,
 			GameManager.instance.isBeta ? " (BETA)" : "",

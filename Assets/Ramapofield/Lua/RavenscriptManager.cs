@@ -82,7 +82,7 @@ namespace Lua
 		{
 			if (ScriptConsole.instance != null)
 			{
-				ScriptConsole.instance.LogInfo("Ravenfield Console");
+				ScriptConsole.instance.LogInfo("Ramapofield Console");
 				ScriptConsole.instance.LogInfo("Ravenfield is ® and © SteelRaven7 AB. All rights reserved.");
 				ScriptConsole.instance.LogInfo("");
 				string message = GameManager.GenerateVersionString();
