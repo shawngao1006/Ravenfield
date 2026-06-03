@@ -13,10 +13,8 @@
     "com.unity.modules.terrain": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
-    "com.unity.modules.uielements_native": "1.0.0",
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
-    "com.unity.modules.windowsmr": "1.0.0",
     "com.unity.ugui": "1.0.0",
     "com.unity.textmeshpro": "4.1.7"
   }
