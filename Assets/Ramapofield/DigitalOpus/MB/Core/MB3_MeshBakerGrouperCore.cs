@@ -53,8 +53,7 @@ namespace DigitalOpus.MB.Core
 										for (int i = 0; i < lods.Length; i++)
 									{
 										Renderer[] renderers = lods[i].renderers;
-										Predicate<Renderer> match = (Renderer x) => x == r;
-										if (Array.Find<Renderer>(renderers, match) != null)
+										if (Array.Exists(renderers, (Renderer x) => x == r))
 										{
 											flag = true;
 											string key3 = string.Format("{0}_LOD{1}", text2, i);
