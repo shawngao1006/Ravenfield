@@ -25,17 +25,12 @@ namespace DigitalOpus.MB.Core
 		internal static bool _CollectPropertyNames(MB3_TextureCombinerPipeline.TexturePipelineData data, MB2_LogLevel LOG_LEVEL)
 		{
 			int i;
-			Predicate<ShaderTextureProperty> <>9__0;
 			int l;
-			for (i = 0; i < data.texPropertyNames.Count; i = l + 1)
-			{
-				List<ShaderTextureProperty> customShaderPropNames = data._customShaderPropNames;
-				Predicate<ShaderTextureProperty> match;
-				if ((match = <>9__0) == null)
-				{
-					match = (<>9__0 = ((ShaderTextureProperty x) => x.name.Equals(data.texPropertyNames[i].name)));
-				}
-				ShaderTextureProperty shaderTextureProperty = customShaderPropNames.Find(match);
+            for (i = 0; i < data.texPropertyNames.Count; i = l + 1)
+            {
+                List<ShaderTextureProperty> customShaderPropNames = data._customShaderPropNames;
+                Predicate<ShaderTextureProperty> match = (ShaderTextureProperty x) => x.name.Equals(data.texPropertyNames[i].name);
+                ShaderTextureProperty shaderTextureProperty = customShaderPropNames.Find(match);
 				if (shaderTextureProperty != null)
 				{
 					data._customShaderPropNames.Remove(shaderTextureProperty);

@@ -95,7 +95,7 @@ namespace MapEditor
 		{
 			IEnumerable<PropertyBinding> outer = p1.GetBindings();
 			PropertyBinding[] inner = p2.GetBindings();
-			foreach (var <>f__AnonymousType in from b1 in outer
+			foreach (var bindingPair in from b1 in outer
 			join b2 in inner on b1.name equals b2.name
 			select new
 			{
@@ -103,16 +103,16 @@ namespace MapEditor
 				b2
 			})
 			{
-				if (<>f__AnonymousType.b1.GetType() == <>f__AnonymousType.b2.GetType())
+				if (bindingPair.b1.GetType() == bindingPair.b2.GetType())
 				{
-					object value = <>f__AnonymousType.b1.GetValue();
+					object value = bindingPair.b1.GetValue();
 					if (notify)
 					{
-						<>f__AnonymousType.b2.SetValue(value);
+						bindingPair.b2.SetValue(value);
 					}
 					else
 					{
-						<>f__AnonymousType.b2.SetValueQuiet(value);
+						bindingPair.b2.SetValueQuiet(value);
 					}
 				}
 			}

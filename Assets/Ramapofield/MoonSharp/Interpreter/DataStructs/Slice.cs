@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace MoonSharp.Interpreter.DataStructs
 {
 	// Token: 0x020008D2 RID: 2258
-	internal class Slice<T> : IEnumerable<!0>, IEnumerable, IList<!0>, ICollection<!0>
+	internal class Slice<T> : IEnumerable<T>, IEnumerable, IList<T>, ICollection<T>
 	{
 		// Token: 0x06003910 RID: 14608 RVA: 0x0002693F File Offset: 0x00024B3F
 		public Slice(IList<T> list, int from, int length, bool reversed)

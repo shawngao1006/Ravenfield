@@ -49,24 +49,19 @@ namespace Ravenfield.SpecOps
 		private void PopulateWaypointsOfGraph(SpawnPointConnectionGraph graph, PathfindingBox.Type type)
 		{
 			int maskFromGraphType = PathfindingManager.GetMaskFromGraphType(type);
-			OnPathDelegate <>9__0;
 			for (int i = 0; i < graph.spawns.Count; i++)
-			{
-				SpawnPoint spawnPoint = graph.spawns[i];
-				for (int j = i + 1; j < graph.spawns.Count; j++)
-				{
-					SpawnPoint spawnPoint2 = graph.spawns[j];
-					Vector3 position = spawnPoint.transform.position;
-					Vector3 position2 = spawnPoint2.transform.position;
-					OnPathDelegate callback;
-					if ((callback = <>9__0) == null)
-					{
-						callback = (<>9__0 = delegate(Path p)
-						{
-							this.OnWaypointPathCompleted(p, type);
-						});
-					}
-					Path path = ABPath.Construct(position, position2, callback);
+            {
+                SpawnPoint spawnPoint = graph.spawns[i];
+                for (int j = i + 1; j < graph.spawns.Count; j++)
+                {
+                    SpawnPoint spawnPoint2 = graph.spawns[j];
+                    Vector3 position = spawnPoint.transform.position;
+                    Vector3 position2 = spawnPoint2.transform.position;
+                    OnPathDelegate callback = delegate(Path p)
+                    {
+                        this.OnWaypointPathCompleted(p, type);
+                    };
+                    Path path = ABPath.Construct(position, position2, callback);
 					path.nnConstraint.graphMask = maskFromGraphType;
 					path.nnConstraint.constrainWalkability = true;
 					path.nnConstraint.walkable = true;
@@ -250,26 +245,21 @@ namespace Ravenfield.SpecOps
 		{
 			uint tag = (this.specOps.defendingTeam == 0) ? 4U : 5U;
 			Dictionary<TriangleMeshNode, Vector3> nodeNormal = new Dictionary<TriangleMeshNode, Vector3>();
-			Action<GraphNode> <>9__0;
-			foreach (NavGraph navGraph in PathfindingManager.instance.pathfinder.graphs)
-			{
-				if (navGraph is RecastGraph)
-				{
-					NavGraph navGraph2 = navGraph;
-					Action<GraphNode> action;
-					if ((action = <>9__0) == null)
-					{
-						action = (<>9__0 = delegate(GraphNode node)
-						{
-							TriangleMeshNode triangleMeshNode3 = node as TriangleMeshNode;
-							if (triangleMeshNode3 != null && node.Tag <= 1U)
-							{
-								Vector3 nodeNormal = PathfindingManager.GetNodeNormal(triangleMeshNode3);
-								nodeNormal.Add(triangleMeshNode3, nodeNormal);
-							}
-						});
-					}
-					navGraph2.GetNodes(action);
+            foreach (NavGraph navGraph in PathfindingManager.instance.pathfinder.graphs)
+            {
+                if (navGraph is RecastGraph)
+                {
+                    NavGraph navGraph2 = navGraph;
+                    Action<GraphNode> action = delegate(GraphNode node)
+                    {
+                        TriangleMeshNode triangleMeshNode3 = node as TriangleMeshNode;
+                        if (triangleMeshNode3 != null && node.Tag <= 1U)
+                        {
+                            Vector3 normal = PathfindingManager.GetNodeNormal(triangleMeshNode3);
+                            nodeNormal.Add(triangleMeshNode3, normal);
+                        }
+                    };
+                    navGraph2.GetNodes(action);
 				}
 			}
 			foreach (TriangleMeshNode triangleMeshNode in nodeNormal.Keys)

@@ -23,7 +23,7 @@ namespace MoonSharp.Interpreter.Interop.UserDataRegistries
 			}
 			if (includeExtensionTypes)
 			{
-				foreach (var <>f__AnonymousType in from t in asm.SafeGetTypes()
+				foreach (var extensionTypeInfo in from t in asm.SafeGetTypes()
 				let attributes = Framework.Do.GetCustomAttributes(t, typeof(ExtensionAttribute), true)
 				where attributes != null && attributes.Length != 0
 				select new
@@ -32,10 +32,10 @@ namespace MoonSharp.Interpreter.Interop.UserDataRegistries
 					DataType = t
 				})
 				{
-					UserData.RegisterExtensionType(<>f__AnonymousType.DataType, InteropAccessMode.Default);
+					UserData.RegisterExtensionType(extensionTypeInfo.DataType, InteropAccessMode.Default);
 				}
 			}
-			foreach (var <>f__AnonymousType2 in from t in asm.SafeGetTypes()
+			foreach (var userDataTypeInfo in from t in asm.SafeGetTypes()
 			let attributes = Framework.Do.GetCustomAttributes(t, typeof(MoonSharpUserDataAttribute), true)
 			where attributes != null && attributes.Length != 0
 			select new
@@ -44,7 +44,7 @@ namespace MoonSharp.Interpreter.Interop.UserDataRegistries
 				DataType = t
 			})
 			{
-				UserData.RegisterType(<>f__AnonymousType2.DataType, <>f__AnonymousType2.Attributes.OfType<MoonSharpUserDataAttribute>().First<MoonSharpUserDataAttribute>().AccessMode, null);
+				UserData.RegisterType(userDataTypeInfo.DataType, userDataTypeInfo.Attributes.OfType<MoonSharpUserDataAttribute>().First<MoonSharpUserDataAttribute>().AccessMode, null);
 			}
 		}
 

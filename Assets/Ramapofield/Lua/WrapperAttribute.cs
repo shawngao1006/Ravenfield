@@ -34,7 +34,7 @@ namespace Lua
 		// Token: 0x06003AF1 RID: 15089 RVA: 0x0012BD68 File Offset: 0x00129F68
 		public static WrapperAttribute FindWrapper(ICustomAttributeProvider type, out Type wrapper)
 		{
-			var <>f__AnonymousType = (from t in Assembly.GetAssembly(typeof(WrapperAttribute)).GetTypes()
+			var wrapperInfo = (from t in Assembly.GetAssembly(typeof(WrapperAttribute)).GetTypes()
 			where t.IsDefined(typeof(WrapperAttribute), false)
 			select new
 			{
@@ -43,10 +43,10 @@ namespace Lua
 			} into x
 			where x.attribute.forType == type
 			select x).FirstOrDefault();
-			if (<>f__AnonymousType != null)
+			if (wrapperInfo != null)
 			{
-				wrapper = <>f__AnonymousType.wrapper;
-				return <>f__AnonymousType.attribute;
+				wrapper = wrapperInfo.wrapper;
+				return wrapperInfo.attribute;
 			}
 			wrapper = null;
 			return null;

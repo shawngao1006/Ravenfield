@@ -36,9 +36,9 @@ namespace MoonSharp.VsCodeDebugger
 		{
 			this.m_Port = port;
 			Func<SourceCode, string> sourceFinder2 = sourceFinder;
-			if (sourceFinder == null && (sourceFinder2 = MoonSharpVsCodeDebugServer.<>c.<>9__9_0) == null)
+			if (sourceFinder2 == null)
 			{
-				sourceFinder2 = (MoonSharpVsCodeDebugServer.<>c.<>9__9_0 = ((SourceCode s) => s.Name));
+				sourceFinder2 = (SourceCode s) => s.Name;
 			}
 			this.m_Current = new AsyncDebugger(script, sourceFinder2, "Default script");
 			this.m_DebuggerList.Add(this.m_Current);
@@ -56,9 +56,9 @@ namespace MoonSharp.VsCodeDebugger
 				}
 				Script script2 = script;
 				Func<SourceCode, string> sourceFinder2 = sourceFinder;
-				if (sourceFinder == null && (sourceFinder2 = MoonSharpVsCodeDebugServer.<>c.<>9__10_1) == null)
+				if (sourceFinder2 == null)
 				{
-					sourceFinder2 = (MoonSharpVsCodeDebugServer.<>c.<>9__10_1 = ((SourceCode s) => s.Name));
+					sourceFinder2 = (SourceCode s) => s.Name;
 				}
 				AsyncDebugger asyncDebugger = new AsyncDebugger(script2, sourceFinder2, name);
 				script.AttachDebugger(asyncDebugger);

@@ -126,7 +126,7 @@ namespace MapMagic
 				stringWriter.Write(" length=" + ((Array)obj).Length.ToString());
 			}
 			stringWriter.WriteLine(">");
-			Func<object, int> <>9__0;
+			Func<object, int> writeClassFunc;
 			foreach (CustomSerialization.Value value in CustomSerialization.Values(obj))
 			{
 				if (value.type.IsPrimitive)
@@ -194,9 +194,9 @@ namespace MapMagic
 				else if (typeof(CustomSerialization.IStructLink).IsAssignableFrom(value.type))
 				{
 					Func<object, int> func;
-					if ((func = <>9__0) == null)
+					if ((func = writeClassFunc) == null)
 					{
-						func = (<>9__0 = ((object linkObj) => CustomSerialization.WriteClass(linkObj, classes, objects, floats, references)));
+						func = (writeClassFunc = ((object linkObj) => CustomSerialization.WriteClass(linkObj, classes, objects, floats, references)));
 					}
 					Func<object, int> writeClass = func;
 					TextWriter textWriter5 = stringWriter;
@@ -522,7 +522,7 @@ namespace MapMagic
 			}
 			references[slotNum] = obj;
 			List<CustomSerialization.Value> list = new List<CustomSerialization.Value>();
-			Func<int, object> <>9__0;
+			Func<int, object> readClassFunc;
 			string text3;
 			for (;;)
 			{
@@ -587,9 +587,9 @@ namespace MapMagic
 					else if (typeof(CustomSerialization.IStructLink).IsAssignableFrom(value.type))
 					{
 						Func<int, object> func;
-						if ((func = <>9__0) == null)
+						if ((func = readClassFunc) == null)
 						{
-							func = (<>9__0 = ((int link) => CustomSerialization.ReadClass(link, classes, objects, floats, references)));
+							func = (readClassFunc = ((int link) => CustomSerialization.ReadClass(link, classes, objects, floats, references)));
 						}
 						Func<int, object> readClass = func;
 						value.obj = Activator.CreateInstance(value.type);

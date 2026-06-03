@@ -423,24 +423,19 @@ public class PathfindingManager : MonoBehaviour
 				}
 			}
 		}
-		Action<GraphNode> <>9__0;
 		foreach (NavGraph navGraph2 in this.pathfinder.graphs)
 		{
 			if (navGraph2 != null && !(navGraph2.GetType() != typeof(RecastGraph)))
 			{
 				RecastGraph recastGraph = (RecastGraph)navGraph2;
 				NavGraph navGraph3 = navGraph2;
-				Action<GraphNode> action;
-				if ((action = <>9__0) == null)
+				Action<GraphNode> action = delegate(GraphNode node)
 				{
-					action = (<>9__0 = delegate(GraphNode node)
+					if (node != null)
 					{
-						if (node != null)
-						{
-							node.Walkable = relevantAreas.Contains(node.Area);
-						}
-					});
-				}
+						node.Walkable = relevantAreas.Contains(node.Area);
+					}
+				};
 				navGraph3.GetNodes(action);
 			}
 		}
@@ -498,24 +493,19 @@ public class PathfindingManager : MonoBehaviour
 		bool flag = true;
 		Collider[] results = new Collider[128];
 		int num2 = 0;
-		Action<GraphNode> <>9__0;
 		while (num2 < 512 && num2 < traversalNodes.Count)
 		{
 			GraphNode graphNode2 = traversalNodes[num2];
 			if (flag)
 			{
 				GraphNode graphNode3 = graphNode2;
-				Action<GraphNode> action;
-				if ((action = <>9__0) == null)
+				Action<GraphNode> action = delegate(GraphNode newNode)
 				{
-					action = (<>9__0 = delegate(GraphNode newNode)
+					if (newNode.Tag != 3U && !traversalNodes.Contains(newNode))
 					{
-						if (newNode.Tag != 3U && !traversalNodes.Contains(newNode))
-						{
-							traversalNodes.Add(newNode);
-						}
-					});
-				}
+						traversalNodes.Add(newNode);
+					}
+				};
 				graphNode3.GetConnections(action);
 				flag = (traversalNodes.Count < 512);
 			}
@@ -778,27 +768,22 @@ public class PathfindingManager : MonoBehaviour
 	{
 		List<GraphNode> nodes = new List<GraphNode>();
 		Matrix4x4 worldToLocalMatrix = transform.worldToLocalMatrix;
-		Action<GraphNode> <>9__0;
 		foreach (NavGraph navGraph in this.pathfinder.data.graphs)
 		{
 			if (navGraph != null && PathfindingManager.GetTypeFromGraphName(navGraph) == type)
 			{
 				NavGraph navGraph2 = navGraph;
-				Action<GraphNode> action;
-				if ((action = <>9__0) == null)
+				Action<GraphNode> action = delegate(GraphNode node)
 				{
-					action = (<>9__0 = delegate(GraphNode node)
+					if (node.Walkable)
 					{
-						if (node.Walkable)
+						Vector3 vector = worldToLocalMatrix.MultiplyPoint((Vector3)node.position);
+						if (Mathf.Abs(vector.x) < 0.5f && Mathf.Abs(vector.y) < 0.5f && Mathf.Abs(vector.z) < 0.5f)
 						{
-							Vector3 vector = worldToLocalMatrix.MultiplyPoint((Vector3)node.position);
-							if (Mathf.Abs(vector.x) < 0.5f && Mathf.Abs(vector.y) < 0.5f && Mathf.Abs(vector.z) < 0.5f)
-							{
-								nodes.Add(node);
-							}
+							nodes.Add(node);
 						}
-					});
-				}
+					}
+				};
 				navGraph2.GetNodes(action);
 			}
 		}

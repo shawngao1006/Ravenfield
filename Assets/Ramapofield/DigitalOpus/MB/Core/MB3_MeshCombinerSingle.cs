@@ -625,20 +625,15 @@ namespace DigitalOpus.MB.Core
 				dictionary2.Add(this.bones[l], l);
 			}
 			int i = 0;
-			Predicate<int> <>9__0;
 			while (i < _goToAdd.Length)
-			{
-				if (!this.instance2Combined_MapContainsKey(_goToAdd[i]))
-				{
-					goto IL_43D;
-				}
-				int[] array5 = array;
-				Predicate<int> match;
-				if ((match = <>9__0) == null)
-				{
-					match = (<>9__0 = ((int o) => o == _goToAdd[i].GetInstanceID()));
-				}
-				if (Array.FindIndex<int>(array5, match) != -1)
+            {
+                if (!this.instance2Combined_MapContainsKey(_goToAdd[i]))
+                {
+                    goto IL_43D;
+                }
+                int[] array5 = array;
+                Predicate<int> match = (int o) => o == _goToAdd[i].GetInstanceID();
+                if (Array.FindIndex<int>(array5, match) != -1
 				{
 					goto IL_43D;
 				}
