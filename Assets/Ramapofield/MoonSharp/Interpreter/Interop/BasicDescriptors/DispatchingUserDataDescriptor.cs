@@ -372,7 +372,7 @@ namespace MoonSharp.Interpreter.Interop.BasicDescriptors
 			}
 			if (metaname != null)
 			{
-				uint num = <PrivateImplementationDetails>.ComputeStringHash(metaname);
+				uint num = MoonSharp.Interpreter.ComputeStringHashHelper.ComputeStringHash(metaname);
 				if (num <= 983266344U)
 				{
 					if (num <= 586211335U)

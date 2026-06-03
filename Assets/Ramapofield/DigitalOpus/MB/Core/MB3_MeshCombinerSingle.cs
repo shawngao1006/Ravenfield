@@ -633,7 +633,7 @@ namespace DigitalOpus.MB.Core
                 }
                 int[] array5 = array;
                 Predicate<int> match = (int o) => o == _goToAdd[i].GetInstanceID();
-                if (Array.FindIndex<int>(array5, match) != -1
+				if (Array.FindIndex<int>(array5, match) != -1)
 				{
 					goto IL_43D;
 				}

@@ -43,7 +43,7 @@ namespace MoonSharp.VsCodeDebugger.SDK
 			{
 				if (command != null)
 				{
-					uint num = <PrivateImplementationDetails>.ComputeStringHash(command);
+					uint num = MoonSharp.Interpreter.ComputeStringHashHelper.ComputeStringHash(command);
 					if (num <= 1531507585U)
 					{
 						if (num <= 466561496U)

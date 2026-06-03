@@ -37,7 +37,7 @@ namespace MoonSharp.Interpreter.Interop
 			}
 			if (name != null)
 			{
-				uint num = <PrivateImplementationDetails>.ComputeStringHash(name);
+				uint num = MoonSharp.Interpreter.ComputeStringHashHelper.ComputeStringHash(name);
 				if (num <= 2366795836U)
 				{
 					if (num <= 1195761148U)

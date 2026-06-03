@@ -264,7 +264,7 @@ namespace MapMagic
 		// Token: 0x06002492 RID: 9362 RVA: 0x00019550 File Offset: 0x00017750
 		public IEnumerable<Coord> DistanceArea(int maxDist)
 		{
-			yield return ref this;
+			yield return this;
 			int num;
 			for (int i = 0; i < maxDist; i = num + 1)
 			{
@@ -291,7 +291,7 @@ namespace MapMagic
 			}) + 1;
 			if (rect.CheckInRange(ref this))
 			{
-				yield return ref this;
+				yield return this;
 			}
 			int num;
 			for (int i = 0; i < maxDist; i = num + 1)

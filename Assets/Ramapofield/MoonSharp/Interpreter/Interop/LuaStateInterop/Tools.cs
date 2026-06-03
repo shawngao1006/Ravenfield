@@ -288,7 +288,7 @@ namespace MoonSharp.Interpreter.Interop.LuaStateInterop
 			string value = m.Groups[2].Value;
 			if (value != null)
 			{
-				uint num = <PrivateImplementationDetails>.ComputeStringHash(value);
+				uint num = MoonSharp.Interpreter.ComputeStringHashHelper.ComputeStringHash(value);
 				if (num <= 3876335077U)
 				{
 					if (num <= 3809224601U)

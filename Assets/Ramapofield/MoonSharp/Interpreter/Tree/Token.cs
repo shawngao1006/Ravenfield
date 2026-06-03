@@ -42,9 +42,9 @@ namespace MoonSharp.Interpreter.Tree
 		// Token: 0x0600329E RID: 12958 RVA: 0x00112394 File Offset: 0x00110594
 		public static TokenType? GetReservedTokenType(string reservedWord)
 		{
-			if (reservedWord != null)
-			{
-				uint num = <PrivateImplementationDetails>.ComputeStringHash(reservedWord);
+				if (reservedWord != null)
+				{
+					uint num = MoonSharp.Interpreter.ComputeStringHashHelper.ComputeStringHash(reservedWord);
 				if (num <= 1646057492U)
 				{
 					if (num <= 699505802U)
