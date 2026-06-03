@@ -50,15 +50,10 @@ namespace DigitalOpus.MB.Core
 								if (componentInParent != null)
 								{
 									LOD[] lods = componentInParent.GetLODs();
-									Predicate<Renderer> <>9__0;
-									for (int i = 0; i < lods.Length; i++)
+										for (int i = 0; i < lods.Length; i++)
 									{
 										Renderer[] renderers = lods[i].renderers;
-										Predicate<Renderer> match;
-										if ((match = <>9__0) == null)
-										{
-											match = (<>9__0 = ((Renderer x) => x == r));
-										}
+										Predicate<Renderer> match = (Renderer x) => x == r;
 										if (Array.Find<Renderer>(renderers, match) != null)
 										{
 											flag = true;
