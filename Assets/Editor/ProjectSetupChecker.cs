@@ -5,21 +5,21 @@ using UnityEngine;
 
 public static class ProjectSetupChecker
 {
-    private const string RavenfieldAssetsPath = "Assets/Ravenfield";
+    private const string RamapofieldAssetsPath = "Assets/Ramapofield";
     private const string ManifestPath = "Packages/manifest.json";
     private const string ProjectVersionPath = "ProjectSettings/ProjectVersion.txt";
     private const string TextMeshProPackage = "com.unity.textmeshpro";
     private const string UguiPackage = "com.unity.ugui";
     private static readonly string[] GeneratedFolders = { "Library", "Temp", "obj", "Build", "Logs" };
 
-    [MenuItem("Tools/Ravenfield/Run Project Setup Check")]
+    [MenuItem("Tools/Ramapofield/Run Project Setup Check")]
     public static void RunProjectSetupCheck()
     {
-        Debug.Log("Ravenfield project setup check started.");
+        Debug.Log("Ramapofield project setup check started.");
 
         bool success = true;
 
-        success &= CheckFolderExists(RavenfieldAssetsPath);
+        success &= CheckFolderExists(RamapofieldAssetsPath);
         success &= CheckFileExists(ManifestPath);
         success &= CheckFileExists(ProjectVersionPath);
 
