@@ -1,404 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
-using Steamworks;
 using UnityEngine;
+#if STEAMWORKS
+using Steamworks;
+#endif
 
 // Token: 0x02000268 RID: 616
+#if STEAMWORKS
 public class SteamworksWrapper
 {
-	// Token: 0x060010C9 RID: 4297 RVA: 0x0000D618 File Offset: 0x0000B818
-	public SteamworksWrapper()
+	// original Steamworks-enabled implementation remains unchanged for builds with STEAMWORKS defined
+#else
+// Minimal no-op Steamworks replacements when STEAMWORKS is not defined.
+namespace Steamworks
+{
+	public struct PublishedFileId_t
 	{
-		this.queryUGCCallResultHandler = new Dictionary<UGCQueryHandle_t, CallResult<SteamUGCQueryCompleted_t>>();
+		public ulong m_PublishedFileId;
+		public PublishedFileId_t(ulong v) { m_PublishedFileId = v; }
+		public override string ToString() { return m_PublishedFileId.ToString(); }
+	}
+	public struct SteamUGCDetails_t { public PublishedFileId_t m_nPublishedFileId; }
+	public struct UGCQueryHandle_t { public ulong handle; public UGCQueryHandle_t(ulong v) { handle = v; } }
+	public struct UGCUpdateHandle_t { public ulong handle; public UGCUpdateHandle_t(ulong v) { handle = v; } }
+	public struct SteamAPICall_t { public ulong m_Handle; public SteamAPICall_t(ulong v) { m_Handle = v; } }
+	public struct CSteamID { public ulong m_SteamID; public CSteamID(ulong id) { m_SteamID = id; } }
+	public struct AppId_t { public uint id; public AppId_t(uint v) { id = v; } }
+	public enum EResult { k_EResultOK = 1 }
+	public enum EItemUpdateStatus { k_EItemUpdateStatusPreparingContent, k_EItemUpdateStatusPreparingConfig }
+	public enum ERemoteStoragePublishedFileVisibility { k_ERemoteStoragePublishedFileVisibilityPrivate, k_ERemoteStoragePublishedFileVisibilityFriendsOnly, k_ERemoteStoragePublishedFileVisibilityPublic }
+	public enum EUGCQuery { k_EUGCQuery_RankedByVotesUp }
+	public enum EUGCMatchingUGCType { k_EUGCMatchingUGCType_Items_ReadyToUse }
+
+	// Input handle placeholders
+	public struct InputAnalogActionHandle_t { public ulong handle; public InputAnalogActionHandle_t(ulong v) { handle = v; } }
+	public struct InputDigitalActionHandle_t { public ulong handle; public InputDigitalActionHandle_t(ulong v) { handle = v; } }
+	public struct InputAnalogActionData_t { }
+}
+
+public class SteamworksWrapper
+{
+	public const uint APP_ID = 636480U;
+	public const string WORKSHOP_TERMS_OF_SERVICE_URL = "http://steamcommunity.com/sharedfiles/workshoplegalagreement";
+	public const string COMMUNITY_FILE_PAGE_URL = "steam://url/CommunityFilePage/";
+
+	public SteamInputWrapper input = new SteamInputWrapper();
+	public bool isInitialized = false;
+	public Steamworks.EResult lastResult = 0;
+	public string errorMessage = null;
+	public Steamworks.PublishedFileId_t[] subscribedItems = null;
+	public SteamworksWrapper.WorkshopItem currentItem = null;
+
+	public delegate void DelOnStateChanged();
+	public delegate void DelOnCreateItemDone(bool ok, Steamworks.PublishedFileId_t itemId);
+	public delegate void DelOnSubmitItemDone(bool ok);
+	public delegate void DelOnUGCQueryDone(bool ok, SteamworksWrapper.UGCQueryResult[] details);
+	public delegate void DelOnItemInstalled(Steamworks.PublishedFileId_t itemId);
+	public delegate void DelOnRemotePublishedFileSubscribed(Steamworks.PublishedFileId_t itemId);
+	public delegate void DelOnRemotePublishedFileUnsubscribed(Steamworks.PublishedFileId_t itemId);
+
+	public DelOnStateChanged OnStateChanged;
+	public DelOnCreateItemDone OnCreateItemDone;
+	public DelOnSubmitItemDone OnSubmitItemDone;
+	public DelOnItemInstalled OnItemInstalled;
+	public DelOnRemotePublishedFileSubscribed OnRemotePublishedFileSubscribed;
+	public DelOnRemotePublishedFileUnsubscribed OnRemotePublishedFileUnsubscribed;
+
+	public SteamworksWrapper() { }
+
+	private void SignalStateChanged() { if (OnStateChanged != null) OnStateChanged(); }
+
+	public bool Initialize() { isInitialized = false; SignalStateChanged(); return false; }
+	public void Update() { }
+	public void Shutdown() { isInitialized = false; SignalStateChanged(); }
+	public string Username() { return "LocalUser"; }
+	public bool HasCurrentItem() { return currentItem != null; }
+	public void SetCurrentItem(SteamworksWrapper.WorkshopItem item) { currentItem = item; SignalStateChanged(); }
+	public void SetCurrentItemId(ulong id) { SetCurrentItem(new WorkshopItem(new Steamworks.PublishedFileId_t(id))); }
+	public void DropCurrentItem() { currentItem = null; }
+
+	public void CreateWorkshopItem() { }
+	public void SubmitCurrentItem(string contentPath, string changeNote) { }
+	public bool IsUploadingItem() { return false; }
+	public bool IsPreparingContentUpload() { return false; }
+	public float GetUploadProgress() { return 0f; }
+
+	public Steamworks.UGCQueryHandle_t CreateUGCQuery(DelOnUGCQueryDone ManagedCallback) { return new Steamworks.UGCQueryHandle_t(0UL); }
+	public void AddRequiredTagUGCQuery(Steamworks.UGCQueryHandle_t query, string tag) { }
+	public void SendUGCQueryRequest(Steamworks.UGCQueryHandle_t query) { }
+	public void QuickQueryItemInfo(Steamworks.PublishedFileId_t[] fileIds, DelOnUGCQueryDone ManagedCallback) { ManagedCallback(true, new UGCQueryResult[0]); }
+
+	public void SubscribeToItem(Steamworks.PublishedFileId_t fileId) { }
+	public uint GetItemState(Steamworks.PublishedFileId_t fileId) { return 0U; }
+	public uint FetchSubscribedItems() { subscribedItems = new Steamworks.PublishedFileId_t[0]; return 0U; }
+	public bool HasFetchedSubscribedItems() { return subscribedItems != null; }
+	public bool IsSubscribedItemInstalled(Steamworks.PublishedFileId_t itemId) { return false; }
+	public string[] GetSubscribedItemPaths() { return new string[0]; }
+	public string GetSubscribedItemPath(Steamworks.PublishedFileId_t id) { return string.Empty; }
+
+	public string GetSteamNick() { return "LocalUser"; }
+	public ulong GetSteamId() { return 0UL; }
+
+	private void SetError(string error) { this.errorMessage = error; }
+
+	public void OpenCommunityFilePage(Steamworks.PublishedFileId_t itemId) { OpenUrl(COMMUNITY_FILE_PAGE_URL + itemId.m_PublishedFileId.ToString(), false); }
+	public void OpenUrl(string url, bool inSteamOverlay = true) { Application.OpenURL(url); }
+
+	public class WorkshopItem
+	{
+		public Steamworks.PublishedFileId_t itemId;
+		public string title;
+		public string description;
+		public string previewImagePath;
+		public List<string> tags;
+		public WorkshopItem.Visibility visibility;
+		public WorkshopItem(Steamworks.PublishedFileId_t itemId) { this.itemId = itemId; this.visibility = WorkshopItem.Visibility.NoChange; }
+		public override string ToString() { return "WorkshopItem #" + itemId.m_PublishedFileId.ToString(); }
+		public enum Visibility { NoChange, Private, FriendsOnly, Public }
 	}
 
-	// Token: 0x060010CA RID: 4298 RVA: 0x0000D636 File Offset: 0x0000B836
-	public bool Initialize()
-	{
-		this.isInitialized = SteamAPI.Init();
-		if (this.isInitialized)
-		{
-			this.RegisterCallbacks();
-			this.input.Initialize();
-		}
-		this.SignalStateChanged();
-		return this.isInitialized;
-	}
-
-	// Token: 0x060010CB RID: 4299 RVA: 0x0008AFEC File Offset: 0x000891EC
-	public void RegisterCallbacks()
-	{
-		Debug.Log("Registering callbacks");
-		this.createItemResult = CallResult<CreateItemResult_t>.Create(new CallResult<CreateItemResult_t>.APIDispatchDelegate(this.OnCreateItemResult));
-		this.submitItemResult = CallResult<SubmitItemUpdateResult_t>.Create(new CallResult<SubmitItemUpdateResult_t>.APIDispatchDelegate(this.OnSubmitItemResult));
-		this.itemInstalled = Callback<ItemInstalled_t>.Create(new Callback<ItemInstalled_t>.DispatchDelegate(this.OnItemInstalledInt));
-		this.remotePublishedFileSubscribed = Callback<RemoteStoragePublishedFileSubscribed_t>.Create(new Callback<RemoteStoragePublishedFileSubscribed_t>.DispatchDelegate(this.OnRemotePublishedFileSubscribedInt));
-		this.remotePublishedFileUnsubscribed = Callback<RemoteStoragePublishedFileUnsubscribed_t>.Create(new Callback<RemoteStoragePublishedFileUnsubscribed_t>.DispatchDelegate(this.OnRemotePublishedFileUnsubscribedInt));
-	}
-
-	// Token: 0x060010CC RID: 4300 RVA: 0x0000D669 File Offset: 0x0000B869
-	private void SignalStateChanged()
-	{
-		if (this.OnStateChanged != null)
-		{
-			this.OnStateChanged();
-		}
-	}
-
-	// Token: 0x060010CD RID: 4301 RVA: 0x0000D67E File Offset: 0x0000B87E
-	public bool HasCurrentItem()
-	{
-		return this.currentItem != null;
-	}
-
-	// Token: 0x060010CE RID: 4302 RVA: 0x0000D689 File Offset: 0x0000B889
-	public void Shutdown()
-	{
-		SteamAPI.Shutdown();
-		this.isInitialized = false;
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010CF RID: 4303 RVA: 0x0000D69D File Offset: 0x0000B89D
-	private void CheckInitialized()
-	{
-		if (!this.isInitialized)
-		{
-			throw new Exception("SteamworksWrapper is not initialized.");
-		}
-	}
-
-	// Token: 0x060010D0 RID: 4304 RVA: 0x0000D6B2 File Offset: 0x0000B8B2
-	public void Update()
-	{
-		if (this.isInitialized)
-		{
-			SteamAPI.RunCallbacks();
-		}
-	}
-
-	// Token: 0x060010D1 RID: 4305 RVA: 0x0000D6C1 File Offset: 0x0000B8C1
-	public string Username()
-	{
-		this.CheckInitialized();
-		return SteamFriends.GetPersonaName();
-	}
-
-	// Token: 0x060010D2 RID: 4306 RVA: 0x0000D6CE File Offset: 0x0000B8CE
-	private void OnItemInstalledInt(ItemInstalled_t p)
-	{
-		if (p.m_unAppID == SteamUtils.GetAppID() && this.OnItemInstalled != null)
-		{
-			this.OnItemInstalled(p.m_nPublishedFileId);
-		}
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010D3 RID: 4307 RVA: 0x0000D701 File Offset: 0x0000B901
-	private void OnRemotePublishedFileSubscribedInt(RemoteStoragePublishedFileSubscribed_t p)
-	{
-		if (p.m_nAppID == SteamUtils.GetAppID() && this.OnRemotePublishedFileSubscribed != null)
-		{
-			this.OnRemotePublishedFileSubscribed(p.m_nPublishedFileId);
-		}
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010D4 RID: 4308 RVA: 0x0000D734 File Offset: 0x0000B934
-	private void OnRemotePublishedFileUnsubscribedInt(RemoteStoragePublishedFileUnsubscribed_t p)
-	{
-		if (p.m_nAppID == SteamUtils.GetAppID() && this.OnRemotePublishedFileUnsubscribed != null)
-		{
-			this.OnRemotePublishedFileUnsubscribed(p.m_nPublishedFileId);
-		}
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010D5 RID: 4309 RVA: 0x0008B078 File Offset: 0x00089278
-	public CSteamID[] GetAllFriends()
-	{
-		int friendCount = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
-		if (friendCount < 0)
-		{
-			throw new Exception("Could not get friend count");
-		}
-		CSteamID[] array = new CSteamID[friendCount];
-		for (int i = 0; i < friendCount; i++)
-		{
-			array[i] = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
-		}
-		return array;
-	}
-
-	// Token: 0x060010D6 RID: 4310 RVA: 0x0000D767 File Offset: 0x0000B967
-	public string GetSteamIdNickName(CSteamID id)
-	{
-		return SteamFriends.GetFriendPersonaName(id);
-	}
-
-	// Token: 0x060010D7 RID: 4311 RVA: 0x0008B0C0 File Offset: 0x000892C0
-	public void CreateWorkshopItem()
-	{
-		this.CheckInitialized();
-		Debug.Log("Creating item");
-		SteamAPICall_t hAPICall = SteamUGC.CreateItem(SteamUtils.GetAppID(), EWorkshopFileType.k_EWorkshopFileTypeFirst);
-		this.createItemResult.Set(hAPICall, null);
-	}
-
-	// Token: 0x060010D8 RID: 4312 RVA: 0x0008B0F8 File Offset: 0x000892F8
-	private void OnCreateItemResult(CreateItemResult_t p, bool ioFailure)
-	{
-		bool ok = true;
-		this.lastResult = p.m_eResult;
-		if (ioFailure)
-		{
-			this.SetError("Create Item failed, IO Failure!");
-			ok = false;
-		}
-		else if (p.m_eResult != EResult.k_EResultOK)
-		{
-			this.SetError("Create Item failed, error: " + p.m_eResult.ToString());
-			ok = false;
-		}
-		else
-		{
-			this.needsToAcceptWorkshopLegalAgreement = p.m_bUserNeedsToAcceptWorkshopLegalAgreement;
-			this.currentItem = new SteamworksWrapper.WorkshopItem(p.m_nPublishedFileId);
-			this.currentItem.title = "My new item";
-		}
-		if (this.OnCreateItemDone != null)
-		{
-			this.OnCreateItemDone(ok, p.m_nPublishedFileId);
-		}
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010D9 RID: 4313 RVA: 0x0000D76F File Offset: 0x0000B96F
-	public void SetCurrentItemId(ulong id)
-	{
-		this.SetCurrentItem(new SteamworksWrapper.WorkshopItem(new PublishedFileId_t(id)));
-	}
-
-	// Token: 0x060010DA RID: 4314 RVA: 0x0000D782 File Offset: 0x0000B982
-	public void SetCurrentItem(SteamworksWrapper.WorkshopItem item)
-	{
-		this.CheckInitialized();
-		this.currentItem = item;
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010DB RID: 4315 RVA: 0x0008B1A4 File Offset: 0x000893A4
-	public void SubmitCurrentItem(string contentPath, string changeNote)
-	{
-		this.CheckInitialized();
-		if (!this.HasCurrentItem())
-		{
-			throw new Exception("Unable to submit item, there is no current item");
-		}
-		Debug.Log("Submitting item #" + this.currentItem.itemId.m_PublishedFileId.ToString() + " from path " + contentPath);
-		UGCUpdateHandle_t ugcupdateHandle_t = SteamUGC.StartItemUpdate(SteamUtils.GetAppID(), this.currentItem.itemId);
-		if (!string.IsNullOrEmpty(this.currentItem.title))
-		{
-			SteamUGC.SetItemTitle(ugcupdateHandle_t, this.currentItem.title);
-		}
-		if (!string.IsNullOrEmpty(this.currentItem.description))
-		{
-			SteamUGC.SetItemDescription(ugcupdateHandle_t, this.currentItem.description);
-		}
-		if (!string.IsNullOrEmpty(this.currentItem.previewImagePath))
-		{
-			SteamUGC.SetItemPreview(ugcupdateHandle_t, this.currentItem.previewImagePath);
-		}
-		if (this.currentItem.tags != null && this.currentItem.tags.Count > 0)
-		{
-			SteamUGC.SetItemTags(ugcupdateHandle_t, this.currentItem.tags);
-		}
-		if (this.currentItem.visibility != SteamworksWrapper.WorkshopItem.Visibility.NoChange)
-		{
-			ERemoteStoragePublishedFileVisibility eVisibility;
-			if (this.currentItem.visibility == SteamworksWrapper.WorkshopItem.Visibility.Private)
-			{
-				eVisibility = ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPrivate;
-			}
-			else if (this.currentItem.visibility == SteamworksWrapper.WorkshopItem.Visibility.FriendsOnly)
-			{
-				eVisibility = ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityFriendsOnly;
-			}
-			else
-			{
-				eVisibility = ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic;
-			}
-			SteamUGC.SetItemVisibility(ugcupdateHandle_t, eVisibility);
-		}
-		SteamUGC.SetItemContent(ugcupdateHandle_t, contentPath);
-		SteamAPICall_t hAPICall = SteamUGC.SubmitItemUpdate(ugcupdateHandle_t, changeNote);
-		this.submitItemResult.Set(hAPICall, null);
-		this.isUpdatingItem = true;
-		this.lastUpdateHandle = ugcupdateHandle_t;
-	}
-
-	// Token: 0x060010DC RID: 4316 RVA: 0x0000D797 File Offset: 0x0000B997
-	public bool IsUploadingItem()
-	{
-		return this.isUpdatingItem;
-	}
-
-	// Token: 0x060010DD RID: 4317 RVA: 0x0008B310 File Offset: 0x00089510
-	public bool IsPreparingContentUpload()
-	{
-		ulong num;
-		ulong num2;
-		EItemUpdateStatus itemUpdateProgress = SteamUGC.GetItemUpdateProgress(this.lastUpdateHandle, out num, out num2);
-		return itemUpdateProgress == EItemUpdateStatus.k_EItemUpdateStatusPreparingContent || itemUpdateProgress == EItemUpdateStatus.k_EItemUpdateStatusPreparingConfig;
-	}
-
-	// Token: 0x060010DE RID: 4318 RVA: 0x0008B338 File Offset: 0x00089538
-	public float GetUploadProgress()
-	{
-		ulong num;
-		ulong num2;
-		SteamUGC.GetItemUpdateProgress(this.lastUpdateHandle, out num, out num2);
-		if (num2 == 0UL)
-		{
-			return 0f;
-		}
-		return Mathf.Clamp01(num / 1000UL / (num2 / 1000UL));
-	}
-
-	// Token: 0x060010DF RID: 4319 RVA: 0x0008B378 File Offset: 0x00089578
-	private void OnSubmitItemResult(SubmitItemUpdateResult_t p, bool ioFailure)
-	{
-		bool ok = true;
-		this.lastResult = p.m_eResult;
-		this.isUpdatingItem = false;
-		if (ioFailure)
-		{
-			this.SetError("Submit Item failed, IO Failure!");
-			ok = false;
-		}
-		else if (p.m_eResult != EResult.k_EResultOK)
-		{
-			this.SetError("Submit Item failed, error: " + p.m_eResult.ToString());
-			ok = false;
-		}
-		else
-		{
-			this.needsToAcceptWorkshopLegalAgreement = p.m_bUserNeedsToAcceptWorkshopLegalAgreement;
-			Debug.Log("Item was successfully uploaded!");
-		}
-		if (this.OnSubmitItemDone != null)
-		{
-			this.OnSubmitItemDone(ok);
-		}
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010E0 RID: 4320 RVA: 0x0008B40C File Offset: 0x0008960C
-	public UGCQueryHandle_t CreateUGCQuery(SteamworksWrapper.DelOnUGCQueryDone ManagedCallback)
-	{
-		this.CheckInitialized();
-		UGCQueryHandle_t ugcqueryHandle_t = SteamUGC.CreateQueryAllUGCRequest(EUGCQuery.k_EUGCQuery_RankedByVotesUp, EUGCMatchingUGCType.k_EUGCMatchingUGCType_Items_ReadyToUse, new AppId_t(636480U), new AppId_t(636480U), 1U);
-		CallResult<SteamUGCQueryCompleted_t> value = CallResult<SteamUGCQueryCompleted_t>.Create(delegate(SteamUGCQueryCompleted_t p, bool ioFailure)
-		{
-			this.OnSteamUGCQueryCompleted(p, ioFailure, ManagedCallback);
-		});
-		this.queryUGCCallResultHandler.Add(ugcqueryHandle_t, value);
-		return ugcqueryHandle_t;
-	}
-
-	// Token: 0x060010E1 RID: 4321 RVA: 0x0000D79F File Offset: 0x0000B99F
-	public void AddRequiredTagUGCQuery(UGCQueryHandle_t query, string tag)
-	{
-		SteamUGC.AddRequiredTag(query, tag);
-	}
-
-	// Token: 0x060010E2 RID: 4322 RVA: 0x0008B470 File Offset: 0x00089670
-	public void SendUGCQueryRequest(UGCQueryHandle_t query)
-	{
-		SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(query);
-		this.queryUGCCallResultHandler[query].Set(hAPICall, null);
-		this.queryUGCCallResultHandler.Remove(query);
-	}
-
-	// Token: 0x060010E3 RID: 4323 RVA: 0x0008B4A4 File Offset: 0x000896A4
-	public void QuickQueryItemInfo(PublishedFileId_t[] fileIds, SteamworksWrapper.DelOnUGCQueryDone ManagedCallback)
-	{
-		this.CheckInitialized();
-		UGCQueryHandle_t handle = SteamUGC.CreateQueryUGCDetailsRequest(fileIds, (uint)fileIds.Length);
-		CallResult<SteamUGCQueryCompleted_t> callResult = CallResult<SteamUGCQueryCompleted_t>.Create(delegate(SteamUGCQueryCompleted_t p, bool ioFailure)
-		{
-			this.OnSteamUGCQueryCompleted(p, ioFailure, ManagedCallback);
-		});
-		SteamAPICall_t hAPICall = SteamUGC.SendQueryUGCRequest(handle);
-		callResult.Set(hAPICall, null);
-	}
-
-	// Token: 0x060010E4 RID: 4324 RVA: 0x0008B4F4 File Offset: 0x000896F4
-	private void OnSteamUGCQueryCompleted(SteamUGCQueryCompleted_t p, bool ioFailure, SteamworksWrapper.DelOnUGCQueryDone ManagedCallback)
-	{
-		bool ok = true;
-		this.lastResult = p.m_eResult;
-		SteamworksWrapper.UGCQueryResult[] array = null;
-		if (ioFailure)
-		{
-			this.SetError("Item query failed, IO Failure!");
-			ok = false;
-		}
-		else if (p.m_eResult != EResult.k_EResultOK)
-		{
-			this.SetError("Item query failed, error: " + p.m_eResult.ToString());
-			ok = false;
-		}
-		else
-		{
-			array = new SteamworksWrapper.UGCQueryResult[p.m_unNumResultsReturned];
-			for (uint num = 0U; num < p.m_unNumResultsReturned; num += 1U)
-			{
-				SteamUGC.GetQueryUGCResult(p.m_handle, num, out array[(int)num].details);
-				SteamUGC.GetQueryUGCPreviewURL(p.m_handle, num, out array[(int)num].previewImageURL, 1024U);
-			}
-		}
-		ManagedCallback(ok, array);
-		this.SignalStateChanged();
-	}
-
-	// Token: 0x060010E5 RID: 4325 RVA: 0x0000D7A9 File Offset: 0x0000B9A9
-	public void SubscribeToItem(PublishedFileId_t fileId)
-	{
-		SteamUGC.SubscribeItem(fileId);
-	}
-
-	// Token: 0x060010E6 RID: 4326 RVA: 0x0000D7B2 File Offset: 0x0000B9B2
-	public uint GetItemState(PublishedFileId_t fileId)
-	{
-		return SteamUGC.GetItemState(fileId);
-	}
-
-	// Token: 0x060010E7 RID: 4327 RVA: 0x0008B5B8 File Offset: 0x000897B8
-	public uint FetchSubscribedItems()
-	{
-		this.CheckInitialized();
-		uint numSubscribedItems = SteamUGC.GetNumSubscribedItems();
-		this.subscribedItems = new PublishedFileId_t[numSubscribedItems];
-		return SteamUGC.GetSubscribedItems(this.subscribedItems, numSubscribedItems);
-	}
-
-	// Token: 0x060010E8 RID: 4328 RVA: 0x0000D7BA File Offset: 0x0000B9BA
-	public bool HasFetchedSubscribedItems()
-	{
-		this.CheckInitialized();
-		return this.subscribedItems != null;
-	}
-
-	// Token: 0x060010E9 RID: 4329 RVA: 0x0008B5EC File Offset: 0x000897EC
-	public bool AllSubscribedItemsAreInstalled()
-	{
-		this.CheckInitialized();
-		if (!this.HasFetchedSubscribedItems())
-		{
-			throw new Exception("No subscribed items list has been fetched");
-		}
-		foreach (PublishedFileId_t itemId in this.subscribedItems)
+	public struct UGCQueryResult { public Steamworks.SteamUGCDetails_t details; public string previewImageURL; }
+}
+#endif
 		{
 			if (!this.IsSubscribedItemInstalled(itemId))
 			{
